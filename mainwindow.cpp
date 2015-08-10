@@ -95,6 +95,16 @@ void MainWindow::ButtonOpenSessionPushed()
     Session *s = GetCurrentSessionSelection();
     if (s != NULL)
     {
+        for (auto w: activeSessionWindows)
+        {
+            if (w->GetSession() == s)
+            {
+                w->activateWindow();
+                w->raise();
+                return;
+            }
+        }
+
         SessionWindow *w = new SessionWindow(s);
         activeSessionWindows.push_back(w);
         w->show();

@@ -2,6 +2,7 @@
 #define SESSIONWINDOW_H
 
 #include <QMainWindow>
+#include <QKeyEvent>
 
 #include "session.h"
 
@@ -18,6 +19,7 @@ public:
     ~SessionWindow();
 
     void closeEvent(QCloseEvent *event);
+    void keyPressEvent(QKeyEvent *event);
 
     Session * GetSession();
 
