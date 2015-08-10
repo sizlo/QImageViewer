@@ -18,6 +18,11 @@ QString Session::GetAsString()
     return currentFileName;
 }
 
+QString Session::GetDirectoryPath()
+{
+    return directory.absolutePath();
+}
+
 QString Session::GetCurrentFileName()
 {
     return currentFileName;

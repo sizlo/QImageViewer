@@ -18,6 +18,8 @@ SessionWindow::SessionWindow(Session *s, QWidget *parent) :
     QObject::connect(ui->btnPrevious, SIGNAL(clicked()), this, SLOT(ButtonPreviousPushed()));
 
     ShowCurrentImage();
+
+    setWindowTitle("QImageViewer | " + session->GetDirectoryPath());
 }
 
 SessionWindow::~SessionWindow()

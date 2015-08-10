@@ -10,6 +10,7 @@ public:
 
     QString GetAsString();
     QString GetCurrentFileName();
+    QString GetDirectoryPath();
 
     void LoadFiles();
     void NextFile();

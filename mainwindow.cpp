@@ -29,6 +29,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(ui->btnNewSession, SIGNAL(clicked()), this, SLOT(ButtonNewSessionPushed()));
 
     PopulateSessionList();
+
+    setWindowTitle("QImageViewer");
 }
 
 MainWindow::~MainWindow()
