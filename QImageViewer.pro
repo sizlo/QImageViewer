@@ -14,9 +14,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-        session.cpp
+        session.cpp \
+        sessionwindow.cpp
 
 HEADERS  += mainwindow.h \
-        session.h
+        session.h \
+        sessionwindow.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+        sessionwindow.ui

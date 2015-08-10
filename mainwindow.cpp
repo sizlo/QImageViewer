@@ -3,14 +3,20 @@
 #include <QStringListModel>
 #include <QStandardPaths>
 #include <QSettings>
+#include <QCloseEvent>
+#include <QMessageBox>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+
+MainWindow * MainWindow::instance  = NULL;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    instance = this;
+
     settingsFilePath = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
     settingsFilePath += QDir::separator();
     settingsFilePath += "settings.ini";
@@ -28,13 +34,43 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+}
 
-    while (!sessions.empty())
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    event->accept();
+    if (!activeSessionWindows.empty())
     {
-        Session *s = sessions.back();
-        sessions.pop_back();
-        delete s;
+        if (QMessageBox::Yes == QMessageBox::question(this, "Sessions still active",
+                                      "Are you sure you want to exit and close all sessions?",
+                                      QMessageBox::Yes|QMessageBox::No))
+        {
+            while (!activeSessionWindows.empty())
+            {
+                SessionWindow *w = activeSessionWindows.back();
+                activeSessionWindows.pop_back();
+                w->close();
+                delete w;
+            }
+
+            while (!sessions.empty())
+            {
+                Session *s = sessions.back();
+                sessions.pop_back();
+                delete s;
+            }
+        }
+        else
+        {
+            event->ignore();
+        }
     }
+
+}
+
+MainWindow * MainWindow::Get()
+{
+    return instance;
 }
 
 void MainWindow::LoadSettings()
@@ -59,7 +95,9 @@ void MainWindow::ButtonOpenSessionPushed()
     Session *s = GetCurrentSessionSelection();
     if (s != NULL)
     {
-        qDebug() << "Opening" << s->GetAsString();
+        SessionWindow *w = new SessionWindow(s);
+        activeSessionWindows.push_back(w);
+        w->show();
     }
 }
 
@@ -68,12 +106,33 @@ void MainWindow::ButtonDeleteSessionPushed()
     Session *s = GetCurrentSessionSelection();
     if (s != NULL)
     {
-        auto i = sessions.begin();
-        while (*i != s) i++;
-        sessions.erase(i);
-        delete s;
-        PopulateSessionList();
-        SaveSettings();
+        bool shouldDelete = true;
+        for (auto w: activeSessionWindows)
+        {
+            if (w->GetSession() == s)
+            {
+                if (QMessageBox::Yes == QMessageBox::question(this, "Session active",
+                                              "Are you sure you want to delete this active session?",
+                                              QMessageBox::Yes|QMessageBox::No))
+                {
+                    w->close();
+                }
+                else
+                {
+                    shouldDelete = false;
+                }
+                break;
+            }
+        }
+
+        if (shouldDelete)
+        {
+            auto i = sessions.begin();
+            while (*i != s) i++;
+            sessions.erase(i);
+            delete s;
+            PopulateSessionList();
+        }
     }
 }
 
@@ -87,7 +146,6 @@ void MainWindow::ButtonNewSessionPushed()
         Session *newSession = new Session(filename);
         sessions.push_back(newSession);
         PopulateSessionList();
-        SaveSettings();
     }
 }
 
@@ -108,6 +166,8 @@ void MainWindow::PopulateSessionList()
     delete oldModel;
     QStringListModel *newModel = new QStringListModel(sessionNames);
     ui->listSessions->setModel(newModel);
+
+    SaveSettings();
 }
 
 Session * MainWindow::GetCurrentSessionSelection()
@@ -117,4 +177,9 @@ Session * MainWindow::GetCurrentSessionSelection()
     if (rows.empty()) return NULL;
     Session *s = sessions.at(rows.at(0).row());
     return s;
+}
+
+void MainWindow::RemoveActiveSessionWindow(SessionWindow *w)
+{
+    activeSessionWindows.remove(w);
 }
