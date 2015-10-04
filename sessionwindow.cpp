@@ -78,4 +78,7 @@ void SessionWindow::ShowCurrentImage()
 
     ui->lblImage->setPixmap(QPixmap::fromImage(image));
     ui->lblImage->show();
+    ui->lblImage->adjustSize();
+    ui->centralwidget->adjustSize();
+    this->adjustSize();
 }
