@@ -121,6 +121,9 @@ QString Session::GetDescriptor()
 
 void Session::LoadFiles()
 {
+    // Make sure we empty the list so we don't just populate it with duplicates
+    fileNames.clear();
+
     QFileInfoList fileInfos = imgDirectory.entryInfoList(QDir::Files);
     for (auto info: fileInfos)
     {

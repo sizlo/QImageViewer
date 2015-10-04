@@ -1,6 +1,7 @@
 #include <QFileInfo>
 #include <QShortcut>
 #include <QMovie>
+#include <QDebug>
 
 #include "sessionwindow.h"
 #include "mainwindow.h"
