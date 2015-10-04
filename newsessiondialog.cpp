@@ -1,8 +1,9 @@
+#include <QMessageBox>
+#include <QFileDialog>
+#include <QDebug>
+
 #include "newsessiondialog.h"
 #include "ui_newsessiondialog.h"
-#include "qfiledialog.h"
-#include "qmessagebox.h"
-#include "qdebug.h"
 
 NewSessionDialog::NewSessionDialog(QWidget *parent) :
     QDialog(parent),
