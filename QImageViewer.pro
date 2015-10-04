@@ -15,11 +15,14 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
         session.cpp \
-        sessionwindow.cpp
+        sessionwindow.cpp \
+    newsessiondialog.cpp
 
 HEADERS  += mainwindow.h \
         session.h \
-        sessionwindow.h
+        sessionwindow.h \
+    newsessiondialog.h
 
 FORMS    += mainwindow.ui \
-        sessionwindow.ui
+        sessionwindow.ui \
+    newsessiondialog.ui

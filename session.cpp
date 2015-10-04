@@ -4,23 +4,35 @@
 #include "session.h"
 #include "mainwindow.h"
 
-Session::Session(QString filename)
+Session::Session(QString descriptor)
 {
-    currentFileName = filename;
-    QFileInfo info(filename);
-    directory = info.absoluteDir();
+    QStringList items = descriptor.split(";");
 
+    name = items.at(0);
+
+    QString imgFilename = items.at(1);
+    currentFileName = imgFilename;
+    QFileInfo imgInfo(imgFilename);
+    imgDirectory = imgInfo.absoluteDir();
     currentFileIt = fileNames.begin();
+
+    QString txtPath = items.at(2);
+    hasTextDirectory = !txtPath.isEmpty();
+    if (hasTextDirectory)
+    {
+        QFileInfo txtInfo(txtPath);
+        txtDirectory = txtInfo.absoluteDir();
+    }
 }
 
-QString Session::GetAsString()
+QString Session::GetImgDirectoryPath()
 {
-    return currentFileName;
+    return imgDirectory.absolutePath();
 }
 
-QString Session::GetDirectoryPath()
+QString Session::GetName()
 {
-    return directory.absolutePath();
+    return name;
 }
 
 QString Session::GetCurrentFileName()
@@ -28,9 +40,19 @@ QString Session::GetCurrentFileName()
     return currentFileName;
 }
 
+QString Session::GetDescriptor()
+{
+    QString descriptor = name + ";" + currentFileName + ";";
+    if (hasTextDirectory)
+    {
+        descriptor += txtDirectory.absolutePath();
+    }
+    return descriptor;
+}
+
 void Session::LoadFiles()
 {
-    QFileInfoList fileInfos = directory.entryInfoList(QDir::Files);
+    QFileInfoList fileInfos = imgDirectory.entryInfoList(QDir::Files);
     for (auto info: fileInfos)
     {
         fileNames.push_back(info.absoluteFilePath());

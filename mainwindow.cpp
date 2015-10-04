@@ -8,6 +8,7 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "newsessiondialog.h"
 
 MainWindow * MainWindow::instance  = NULL;
 
@@ -78,10 +79,10 @@ MainWindow * MainWindow::Get()
 void MainWindow::LoadSettings()
 {
     QSettings settings(settingsFilePath, QSettings::NativeFormat);
-    QStringList sessionFiles = settings.value("sessionList", QStringList()).toStringList();
-    for (auto file: sessionFiles)
+    QStringList sessionDescriptors = settings.value("sessionList", QStringList()).toStringList();
+    for (auto descriptor: sessionDescriptors)
     {
-        Session *s = new Session(file);
+        Session *s = new Session(descriptor);
         sessions.push_back(s);
     }
 }
@@ -89,7 +90,7 @@ void MainWindow::LoadSettings()
 void MainWindow::SaveSettings()
 {
     QSettings settings(settingsFilePath, QSettings::NativeFormat);
-    settings.setValue("sessionList", GetSessionNames());
+    settings.setValue("sessionList", GetSessionDescriptors());
 }
 
 void MainWindow::ButtonOpenSessionPushed()
@@ -150,12 +151,10 @@ void MainWindow::ButtonDeleteSessionPushed()
 
 void MainWindow::ButtonNewSessionPushed()
 {
-    QFileDialog dialog;
-    dialog.setFileMode(QFileDialog::ExistingFile);
-    if (dialog.exec())
+    NewSessionDialog d;
+    if (d.exec())
     {
-        QString filename = dialog.selectedFiles().at(0);
-        Session *newSession = new Session(filename);
+        Session *newSession = new Session(d.GetSessionDescriptor());
         sessions.push_back(newSession);
         PopulateSessionList();
     }
@@ -166,9 +165,20 @@ QStringList MainWindow::GetSessionNames()
     QStringList sessionNames;
     for (auto s: sessions)
     {
-        sessionNames.append(s->GetAsString());
+        sessionNames.append(s->GetName());
     }
     return sessionNames;
+}
+
+QStringList MainWindow::GetSessionDescriptors()
+{
+    QStringList sessionDescriptors;
+    for (auto s: sessions)
+    {
+        QString descriptor = s->GetDescriptor();
+        sessionDescriptors.append(descriptor);
+    }
+    return sessionDescriptors;
 }
 
 void MainWindow::PopulateSessionList()

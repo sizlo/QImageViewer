@@ -19,7 +19,7 @@ SessionWindow::SessionWindow(Session *s, QWidget *parent) :
 
     ShowCurrentImage();
 
-    setWindowTitle("QImageViewer | " + session->GetDirectoryPath());
+    setWindowTitle("QImageViewer | " + session->GetName());
 }
 
 SessionWindow::~SessionWindow()

@@ -32,6 +32,7 @@ public slots:
 private:
     void LoadSettings();
     void SaveSettings();
+    QStringList GetSessionDescriptors();
     QStringList GetSessionNames();
     Session * GetCurrentSessionSelection();
 

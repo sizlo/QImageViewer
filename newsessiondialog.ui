@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>NewSessionDialog</class>
+ <widget class="QDialog" name="NewSessionDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>462</width>
+    <height>167</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <property name="modal">
+   <bool>true</bool>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QHBoxLayout" name="nameLayout">
+     <item>
+      <widget class="QLabel" name="nameLabel">
+       <property name="minimumSize">
+        <size>
+         <width>72</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Name:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="nameLineEdit"/>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="imgPathLayout">
+     <item>
+      <widget class="QLabel" name="imgPathLabel">
+       <property name="text">
+        <string>Image Path:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="imgPathLineEdit"/>
+     </item>
+     <item>
+      <widget class="QPushButton" name="imgPathButton">
+       <property name="text">
+        <string>Browse</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="txtPathLyout">
+     <item>
+      <widget class="QLabel" name="txtPathLabel">
+       <property name="minimumSize">
+        <size>
+         <width>72</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Text Path:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="txtPathLineEdit"/>
+     </item>
+     <item>
+      <widget class="QPushButton" name="txtPathButton">
+       <property name="text">
+        <string>Browse</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="buttonsLayout">
+     <item>
+      <widget class="QPushButton" name="addSessionButton">
+       <property name="text">
+        <string>Add Session</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="cancelButton">
+       <property name="text">
+        <string>Cancel</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

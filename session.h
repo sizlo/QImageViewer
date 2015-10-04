@@ -6,18 +6,22 @@
 class Session
 {
 public:
-    Session(QString filename);
+    Session(QString descriptor);
 
-    QString GetAsString();
     QString GetCurrentFileName();
-    QString GetDirectoryPath();
+    QString GetImgDirectoryPath();
+    QString GetName();
+    QString GetDescriptor();
 
     void LoadFiles();
     void NextFile();
     void PreviousFile();
 
 private:
-    QDir directory;
+    QDir imgDirectory;
+    bool hasTextDirectory;
+    QDir txtDirectory;
+    QString name;
     QString currentFileName;
     QStringList fileNames;
     QStringList::iterator currentFileIt;
