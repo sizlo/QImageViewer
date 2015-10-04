@@ -4,6 +4,55 @@
 #include "session.h"
 #include "mainwindow.h"
 
+// Function used to sort strings where whole numbers present in the string are compared
+// and not seperate digits
+bool lessThanObeyingNumericOrder(QString &lhs, QString &rhs)
+{
+    int lhsLength = lhs.length();
+    int rhsLength = rhs.length();
+
+    int currentLhsCharPos = 0;
+    int currentRhsCharPos = 0;
+    while (currentLhsCharPos < lhsLength && currentRhsCharPos < rhsLength)
+    {
+        QChar lhsChar = lhs.at(currentLhsCharPos);
+        QChar rhsChar = rhs.at(currentRhsCharPos);
+
+        // If both characters are digits find the full number and compare the two
+        if (lhsChar.isDigit() && rhsChar.isDigit())
+        {
+            QString lhsNum = lhsChar;
+            while (lhs.at(currentLhsCharPos + 1).isDigit())
+            {
+                currentLhsCharPos++;
+                lhsNum += lhs.at(currentLhsCharPos);
+            }
+            QString rhsNum = rhsChar;
+            while (rhs.at(currentRhsCharPos + 1).isDigit())
+            {
+                currentRhsCharPos++;
+                rhsNum += rhs.at(currentRhsCharPos);
+            }
+            if (lhsNum.toInt() < rhsNum.toInt())
+            {
+                return true;
+            }
+        }
+        else
+        {
+            if (lhsChar < rhsChar)
+            {
+                return true;
+            }
+        }
+
+        currentLhsCharPos++;
+        currentRhsCharPos++;
+    }
+
+    return false;
+}
+
 Session::Session(QString descriptor)
 {
     QStringList items = descriptor.split(";");
@@ -57,6 +106,7 @@ void Session::LoadFiles()
     {
         fileNames.push_back(info.absoluteFilePath());
     }
+    qSort(fileNames.begin(), fileNames.end(), lessThanObeyingNumericOrder);
 
     currentFileIt = fileNames.begin();
     while (*currentFileIt != currentFileName)
