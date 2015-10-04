@@ -70,7 +70,7 @@ Session::Session(QString descriptor)
     if (hasTextDirectory)
     {
         QFileInfo txtInfo(txtPath);
-        txtDirectory = txtInfo.absoluteDir();
+        txtDirectory = txtInfo.absoluteFilePath();
     }
 }
 
@@ -87,6 +87,26 @@ QString Session::GetName()
 QString Session::GetCurrentFileName()
 {
     return currentFileName;
+}
+
+QString Session::GetCurrentHoverText()
+{
+    QFileInfo imageInfo(currentFileName);
+    QString baseName = imageInfo.baseName();
+    QString textPath = txtDirectory.absolutePath() + QDir::separator() + baseName + ".txt";
+    QFileInfo textInfo(textPath);
+    if (textInfo.exists() && textInfo.isFile())
+    {
+        QFile textFile(textPath);
+        if (textFile.open(QIODevice::ReadOnly))
+        {
+            QTextStream stream(&textFile);
+            QString hoverText = stream.readAll();
+            return hoverText;
+        }
+    }
+
+    return "";
 }
 
 QString Session::GetDescriptor()

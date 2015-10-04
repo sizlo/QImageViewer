@@ -67,12 +67,14 @@ void SessionWindow::ShowCurrentImage()
 {
     QString filename = session->GetCurrentFileName();
 
+    // Display the current filename in a label
     QFileInfo info(filename);
     ui->lblFilename->setText(info.fileName());
 
-
+    // Remember the previous movie
     QMovie *oldMovie = ui->lblImage->movie();
 
+    // Setup the movie for the current image
     QMovie *newMovie = new QMovie(filename);
     if (!newMovie->isValid())
     {
@@ -82,8 +84,16 @@ void SessionWindow::ShowCurrentImage()
     ui->lblImage->setMovie(newMovie);
     newMovie->start();
 
-    delete oldMovie;
+    // Delete the previous movie
+    if (oldMovie != NULL)
+    {
+        delete oldMovie;
+    }
 
+    // Set the hover text for the current image
+    ui->lblImage->setToolTip(session->GetCurrentHoverText());
+
+    // Pack the window
     ui->lblImage->adjustSize();
     ui->centralwidget->adjustSize();
     this->adjustSize();

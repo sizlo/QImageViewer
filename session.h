@@ -9,6 +9,7 @@ public:
     Session(QString descriptor);
 
     QString GetCurrentFileName();
+    QString GetCurrentHoverText();
     QString GetImgDirectoryPath();
     QString GetName();
     QString GetDescriptor();
