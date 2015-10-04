@@ -6,7 +6,7 @@
 
 // Function used to sort strings where whole numbers present in the string are compared
 // and not seperate digits
-bool lessThanObeyingNumericOrder(QString &lhs, QString &rhs)
+bool lessThanObeyingNumericOrder(const QString lhs, const QString rhs)
 {
     int lhsLength = lhs.length();
     int rhsLength = rhs.length();
@@ -33,16 +33,16 @@ bool lessThanObeyingNumericOrder(QString &lhs, QString &rhs)
                 currentRhsCharPos++;
                 rhsNum += rhs.at(currentRhsCharPos);
             }
-            if (lhsNum.toInt() < rhsNum.toInt())
+            if (lhsNum.toInt() != rhsNum.toInt())
             {
-                return true;
+                return lhsNum.toInt() < rhsNum.toInt();
             }
         }
         else
         {
-            if (lhsChar < rhsChar)
+            if (lhsChar != rhsChar)
             {
-                return true;
+                return lhsChar < rhsChar;
             }
         }
 
