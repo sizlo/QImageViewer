@@ -1,5 +1,6 @@
 #include <QFileInfo>
 #include <QShortcut>
+#include <QMovie>
 
 #include "sessionwindow.h"
 #include "mainwindow.h"
@@ -69,15 +70,20 @@ void SessionWindow::ShowCurrentImage()
     QFileInfo info(filename);
     ui->lblFilename->setText(info.fileName());
 
-    QImage image(filename);
-    if (image.isNull())
+
+    QMovie *oldMovie = ui->lblImage->movie();
+
+    QMovie *newMovie = new QMovie(filename);
+    if (!newMovie->isValid())
     {
         ui->lblImage->setText("File format not supported");
         return;
     }
+    ui->lblImage->setMovie(newMovie);
+    newMovie->start();
 
-    ui->lblImage->setPixmap(QPixmap::fromImage(image));
-    ui->lblImage->show();
+    delete oldMovie;
+
     ui->lblImage->adjustSize();
     ui->centralwidget->adjustSize();
     this->adjustSize();
