@@ -26,6 +26,8 @@ public:
 public slots:
     void ButtonNextPushed();
     void ButtonPreviousPushed();
+    void ButtonFirstPushed();
+    void ButtonLastPushed();
 
 private:
     void ShowCurrentImage();

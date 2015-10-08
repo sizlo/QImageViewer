@@ -160,3 +160,20 @@ void Session::PreviousFile()
 
     MainWindow::Get()->PopulateSessionList();
 }
+
+void Session::FirstFile()
+{
+    currentFileIt = fileNames.begin();
+    currentFileName = *currentFileIt;
+
+    MainWindow::Get()->PopulateSessionList();
+}
+
+void Session::LastFile()
+{
+    currentFileIt = fileNames.end();
+    currentFileIt--;
+    currentFileName = *currentFileIt;
+
+    MainWindow::Get()->PopulateSessionList();
+}

@@ -18,6 +18,8 @@ SessionWindow::SessionWindow(Session *s, QWidget *parent) :
 
     QObject::connect(ui->btnNext, SIGNAL(clicked()), this, SLOT(ButtonNextPushed()));
     QObject::connect(ui->btnPrevious, SIGNAL(clicked()), this, SLOT(ButtonPreviousPushed()));
+    QObject::connect(ui->btnFirst, SIGNAL(clicked()), this, SLOT(ButtonFirstPushed()));
+    QObject::connect(ui->btnLast, SIGNAL(clicked()), this, SLOT(ButtonLastPushed()));
 
     ShowCurrentImage();
 
@@ -61,6 +63,18 @@ void SessionWindow::ButtonNextPushed()
 void SessionWindow::ButtonPreviousPushed()
 {
     session->PreviousFile();
+    ShowCurrentImage();
+}
+
+void SessionWindow::ButtonFirstPushed()
+{
+    session->FirstFile();
+    ShowCurrentImage();
+}
+
+void SessionWindow::ButtonLastPushed()
+{
+    session->LastFile();
     ShowCurrentImage();
 }
 

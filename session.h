@@ -17,6 +17,8 @@ public:
     void LoadFiles();
     void NextFile();
     void PreviousFile();
+    void FirstFile();
+    void LastFile();
 
 private:
     QDir imgDirectory;
