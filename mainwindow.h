@@ -33,7 +33,7 @@ private:
     void LoadSettings();
     void SaveSettings();
     QStringList GetSessionDescriptors();
-    QStringList GetSessionNames();
+    QStringList GetSessionEntries();
     Session * GetCurrentSessionSelection();
 
     Ui::MainWindow *ui;

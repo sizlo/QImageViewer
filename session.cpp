@@ -121,15 +121,7 @@ QString Session::GetDescriptor()
 
 void Session::LoadFiles()
 {
-    // Make sure we empty the list so we don't just populate it with duplicates
-    fileNames.clear();
-
-    QFileInfoList fileInfos = imgDirectory.entryInfoList(QDir::Files);
-    for (auto info: fileInfos)
-    {
-        fileNames.push_back(info.absoluteFilePath());
-    }
-    qSort(fileNames.begin(), fileNames.end(), lessThanObeyingNumericOrder);
+    fileNames = GetSortedFilenameList();
 
     currentFileIt = fileNames.begin();
     while (*currentFileIt != currentFileName)
@@ -176,4 +168,24 @@ void Session::LastFile()
     currentFileName = *currentFileIt;
 
     MainWindow::Get()->PopulateSessionList();
+}
+
+bool Session::IsOnLastFile()
+{
+    QStringList theFilenames = GetSortedFilenameList();
+    return currentFileName == theFilenames.last();
+}
+
+QStringList Session::GetSortedFilenameList()
+{
+    QStringList theFilenames;
+
+    QFileInfoList fileInfos = imgDirectory.entryInfoList(QDir::Files);
+    for (auto info: fileInfos)
+    {
+        theFilenames.push_back(info.absoluteFilePath());
+    }
+    qSort(theFilenames.begin(), theFilenames.end(), lessThanObeyingNumericOrder);
+
+    return theFilenames;
 }

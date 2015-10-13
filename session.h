@@ -20,7 +20,11 @@ public:
     void FirstFile();
     void LastFile();
 
+    bool IsOnLastFile();
+
 private:
+    QStringList GetSortedFilenameList();
+
     QDir imgDirectory;
     bool hasTextDirectory;
     QDir txtDirectory;

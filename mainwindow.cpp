@@ -160,14 +160,19 @@ void MainWindow::ButtonNewSessionPushed()
     }
 }
 
-QStringList MainWindow::GetSessionNames()
+QStringList MainWindow::GetSessionEntries()
 {
-    QStringList sessionNames;
+    QStringList sessionEntries;
     for (auto s: sessions)
     {
-        sessionNames.append(s->GetName());
+        QString entry = s->GetName();
+        if (!s->IsOnLastFile())
+        {
+            entry += " *";
+        }
+        sessionEntries.append(entry);
     }
-    return sessionNames;
+    return sessionEntries;
 }
 
 QStringList MainWindow::GetSessionDescriptors()
@@ -183,10 +188,10 @@ QStringList MainWindow::GetSessionDescriptors()
 
 void MainWindow::PopulateSessionList()
 {
-    QStringList sessionNames = GetSessionNames();
+    QStringList sessionEntries = GetSessionEntries();
     QAbstractItemModel *oldModel = ui->listSessions->model();
     delete oldModel;
-    QStringListModel *newModel = new QStringListModel(sessionNames);
+    QStringListModel *newModel = new QStringListModel(sessionEntries);
     ui->listSessions->setModel(newModel);
 
     SaveSettings();
