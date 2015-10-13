@@ -72,6 +72,8 @@ Session::Session(QString descriptor)
         QFileInfo txtInfo(txtPath);
         txtDirectory = txtInfo.absoluteFilePath();
     }
+
+    LoadFiles();
 }
 
 QString Session::GetImgDirectoryPath()
@@ -172,8 +174,7 @@ void Session::LastFile()
 
 bool Session::IsOnLastFile()
 {
-    QStringList theFilenames = GetSortedFilenameList();
-    return currentFileName == theFilenames.last();
+    return currentFileName == fileNames.last();
 }
 
 QStringList Session::GetSortedFilenameList()

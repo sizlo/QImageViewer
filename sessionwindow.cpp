@@ -12,6 +12,7 @@ SessionWindow::SessionWindow(Session *s, QWidget *parent) :
     ui(new Ui::SessionWindow)
 {
     session = s;
+    // Load the files for the session again, in case any new ones have been added
     session->LoadFiles();
 
     ui->setupUi(this);
