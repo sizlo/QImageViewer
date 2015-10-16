@@ -2,6 +2,9 @@
 #include <QShortcut>
 #include <QMovie>
 #include <QDebug>
+#include <QScrollBar>
+#include <QSizePolicy>
+#include <QDesktopWidget>
 
 #include "sessionwindow.h"
 #include "mainwindow.h"
@@ -17,12 +20,14 @@ SessionWindow::SessionWindow(Session *s, QWidget *parent) :
 
     ui->setupUi(this);
 
+    lblImage = new QLabel;
+    lblImage->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+    ui->imageScrollArea->setWidget(lblImage);
+
     QObject::connect(ui->btnNext, SIGNAL(clicked()), this, SLOT(ButtonNextPushed()));
     QObject::connect(ui->btnPrevious, SIGNAL(clicked()), this, SLOT(ButtonPreviousPushed()));
     QObject::connect(ui->btnFirst, SIGNAL(clicked()), this, SLOT(ButtonFirstPushed()));
     QObject::connect(ui->btnLast, SIGNAL(clicked()), this, SLOT(ButtonLastPushed()));
-
-    ShowCurrentImage();
 
     setWindowTitle("QImageViewer | " + session->GetName());
 }
@@ -79,6 +84,12 @@ void SessionWindow::ButtonLastPushed()
     ShowCurrentImage();
 }
 
+void SessionWindow::showEvent(QShowEvent *event)
+{
+    QWidget::showEvent(event);
+    ShowCurrentImage();
+}
+
 void SessionWindow::ShowCurrentImage()
 {
     QString filename = session->GetCurrentFileName();
@@ -88,16 +99,16 @@ void SessionWindow::ShowCurrentImage()
     ui->lblFilename->setText(info.fileName());
 
     // Remember the previous movie
-    QMovie *oldMovie = ui->lblImage->movie();
+    QMovie *oldMovie = lblImage->movie();
 
     // Setup the movie for the current image
     QMovie *newMovie = new QMovie(filename);
     if (!newMovie->isValid())
     {
-        ui->lblImage->setText("File format not supported");
+        lblImage->setText("File format not supported");
         return;
     }
-    ui->lblImage->setMovie(newMovie);
+    lblImage->setMovie(newMovie);
     newMovie->start();
 
     // Delete the previous movie
@@ -107,10 +118,52 @@ void SessionWindow::ShowCurrentImage()
     }
 
     // Set the hover text for the current image
-    ui->lblImage->setToolTip(session->GetCurrentHoverText());
+    lblImage->setToolTip(session->GetCurrentHoverText());
 
     // Pack the window
-    ui->lblImage->adjustSize();
+    lblImage->adjustSize();
+    // Must resize scroll area by hand, add a small offset so scrollbars hide
+    ui->imageScrollArea->setFixedHeight(lblImage->height() + 2);
+    ui->imageScrollArea->setFixedWidth(lblImage->width() + 2);
     ui->centralwidget->adjustSize();
     this->adjustSize();
+
+    // If we're too big then shrink the scroll area
+    int availableHeight = QApplication::desktop()->availableGeometry().height();
+    int availableWidth = QApplication::desktop()->availableGeometry().width();
+    int windowHeight = this->frameSize().height();
+    int windowWidth = this->frameSize().width();
+    if (windowHeight > availableHeight)
+    {
+        int offset = windowHeight - availableHeight;
+        ui->imageScrollArea->setFixedHeight(ui->imageScrollArea->height() - offset);
+
+        // Expand the width because of the new scrollbar
+        int roomToGrowWidth = availableWidth - windowWidth;
+        int amountToExpandWidth = std::min(roomToGrowWidth, ui->imageScrollArea->verticalScrollBar()->width());
+        amountToExpandWidth = std::max(amountToExpandWidth, 0);
+        ui->imageScrollArea->setFixedWidth(ui->imageScrollArea->width() + amountToExpandWidth);
+
+        // Pack the rest of the ui
+        ui->centralwidget->adjustSize();
+        this->adjustSize();
+    }
+
+    windowHeight = this->frameSize().height();
+    windowWidth = this->frameSize().width();
+    if (windowWidth > availableWidth)
+    {
+        int offset = windowWidth - availableWidth;
+        ui->imageScrollArea->setFixedWidth(ui->imageScrollArea->width() - offset);
+
+        // Expand the height because of the new scrollbar
+        int roomToGrowHeight = availableHeight - windowHeight;
+        int amountToExpandHeight = std::min(roomToGrowHeight, ui->imageScrollArea->horizontalScrollBar()->height());
+        amountToExpandHeight = std::max(amountToExpandHeight, 0);
+        ui->imageScrollArea->setFixedHeight(ui->imageScrollArea->height() + amountToExpandHeight);
+
+        // Pack the rest of the ui
+        ui->centralwidget->adjustSize();
+        this->adjustSize();
+    }
 }

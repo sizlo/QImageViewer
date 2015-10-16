@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include <QKeyEvent>
+#include <QLabel>
+#include <QShowEvent>
 
 #include "session.h"
 
@@ -29,10 +31,14 @@ public slots:
     void ButtonFirstPushed();
     void ButtonLastPushed();
 
+protected:
+    void showEvent(QShowEvent *event);
+
 private:
     void ShowCurrentImage();
 
     Ui::SessionWindow *ui;
+    QLabel *lblImage;
     Session *session;
 };
 
