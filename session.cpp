@@ -108,6 +108,24 @@ QString Session::GetCurrentHoverText()
         }
     }
 
+    // If we're using an ordered symlink directory from dosage the
+    // image file will have it's index prepended to the filename, eg:
+    // 00023_23rdstrip.png
+    // Try find a text match without that index trimmed off
+    QString trimmedBaseName = baseName.mid(6);
+    textPath = txtDirectory.absolutePath() + QDir::separator() + trimmedBaseName + ".txt";
+    textInfo = QFileInfo(textPath);
+    if (textInfo.exists() && textInfo.isFile())
+    {
+        QFile textFile(textPath);
+        if (textFile.open(QIODevice::ReadOnly))
+        {
+            QTextStream stream(&textFile);
+            QString hoverText = stream.readAll();
+            return hoverText;
+        }
+    }
+
     return "";
 }
 
