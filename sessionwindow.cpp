@@ -118,7 +118,7 @@ void SessionWindow::ShowCurrentImage()
     }
 
     // Set the hover text for the current image
-    lblImage->setToolTip(session->GetCurrentHoverText());
+    lblImage->setToolTip(QString("<FONT COLOR=black>") + session->GetCurrentHoverText() + QString("</FONT>"));
 
     // Pack the window
     lblImage->adjustSize();
